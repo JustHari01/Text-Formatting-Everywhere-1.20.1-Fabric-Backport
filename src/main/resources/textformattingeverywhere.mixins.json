@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "potat369.textformattingeverywhere.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "textformattingeverywhere.refmap.json",
+  "mixins": [
+    "SharedConstantsMixin",
+    "ServerGamePacketListenerImplMixin"
+  ]
+}

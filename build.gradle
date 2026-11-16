@@ -1,0 +1,72 @@
+plugins {
+    id 'fabric-loom' version '1.7-SNAPSHOT'
+    id 'maven-publish'
+}
+
+version = project.version
+group = 'potat369.textformattingeverywhere'
+base {
+    archivesName = 'textformattingeverywhere-fabric-1.20.1-unofficial'
+}
+
+repositories {
+    maven { url = 'https://maven.fabricmc.net/' }
+    mavenCentral()
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    annotationProcessor 'net.fabricmc:sponge-mixin:0.13.3+mixin.0.8.5'
+}
+
+loom {
+    mixin {
+        defaultRefmapName = 'textformattingeverywhere.refmap.json'
+    }
+    runs {
+        client {
+            client()
+            runDir 'run/client'
+        }
+        server {
+            server()
+            runDir 'run/server'
+        }
+    }
+}
+
+processResources {
+    inputs.properties([
+        version: project.version,
+        mod_id: project.mod_id,
+        mod_name: project.mod_name,
+        mod_description: project.mod_description,
+        mod_author: project.mod_author,
+        mod_license: project.mod_license,
+        minecraft_version: project.minecraft_version
+    ])
+    filesMatching('fabric.mod.json') {
+        expand(version: project.version, mod_id: project.mod_id,
+            mod_name: project.mod_name, mod_description: project.mod_description,
+            mod_author: project.mod_author, mod_license: project.mod_license,
+            minecraft_version: project.minecraft_version)
+    }
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(17)
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 17
+}
+
+jar {
+    from('LICENSE') {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
+}
